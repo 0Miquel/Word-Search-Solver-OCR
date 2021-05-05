@@ -26,7 +26,6 @@ def find_contours(img, inv_thresh, thresh):
     ctrs, hier = cv2.findContours(inv_thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     # sort contours
     sorted_ctrs = sort_ctrs(ctrs)
-    #sorted_ctrs = sorted(ctrs, key=lambda ctr: cv2.boundingRect(ctr)[0] + cv2.boundingRect(ctr)[1] * thresh.shape[1] )
     for i, ctr in enumerate(sorted_ctrs):
         # Get bounding box
         x, y, w, h = ctr
@@ -180,14 +179,32 @@ def remove_extra_information(thresh, inv_thresh):
         for j in range(len(box[i])):
             if labels[i][j] != 2:
                 new_thresh[i][j] = 255
-    cv2.imshow('Final', new_thresh)
-    cv2.waitKey()
-    cv2.destroyAllWindows()
 
     return new_thresh
 
+def remove_isolated_pixels(thresh):
+    """
+
+    :param thresh:
+    :return:
+    """
+    inv_thresh = inv_image(thresh)
+    connectivity = 8
+    output  = cv2.connectedComponentsWithStats(inv_thresh, connectivity, cv2.CV_32S)
+    n_labels = output[0]
+    labels = output[1]
+    stats = output[2]
+
+    for label in range(n_labels):
+        if stats[label, cv2.CC_STAT_AREA] < 5:
+            inv_thresh[labels == label] = 0
+
+    new_thresh = inv_image(inv_thresh)
+    return new_thresh, inv_thresh
+
+
 if __name__ == "__main__":
-    mode = "easy"
+    mode = "hard"
     if mode == "easy":
         img = read_image('../images/mini_word.png')
         gray = get_gray_image(img)
@@ -202,3 +219,8 @@ if __name__ == "__main__":
         thresh = adaptative_threshold(gray)
         inv_thresh = inv_image(thresh)
         new_thresh = remove_extra_information(thresh, inv_thresh)
+
+        new_thresh2, inv_thresh2 = remove_isolated_pixels(new_thresh)
+        result = find_contours(img, inv_thresh2, new_thresh2)
+        result = result.reshape((15, 20))
+        print(result)
