@@ -202,9 +202,88 @@ def remove_isolated_pixels(thresh):
     new_thresh = inv_image(inv_thresh)
     return new_thresh, inv_thresh
 
+def word_search_solver(matrix, word): #de moment només horitzontal i vertical cap a la dreta i abaix
+    """
+
+    :param matrix, word:
+    :return: 
+    """
+    trobat = False
+    word = [ch for ch in word]
+    positions = []
+    w = word
+    letter = w[0]
+    w = w[1:]
+    
+    for row in range(len(matrix)):
+        for col in range(len(matrix[row])):
+            if not trobat:
+                trobat = word_search_solver_recursive_horitzontal(matrix, w, letter, row, col, positions) #word te at, letter te c
+                if (trobat == False and positions != []):
+                    positions = []
+                    letter = word[0]
+                    w = word
+                    letter = w[0]
+                    w = w[1:]
+            else:
+                break
+    if not trobat:
+        for row in range(len(matrix)):
+            for col in range(len(matrix[row])):
+                if not trobat:
+                    trobat = word_search_solver_recursive_vertical(matrix, w, letter, row, col, positions) #word te at, letter te c
+                    if (trobat == False and positions != []):
+                        positions = []
+                        letter = word[0]
+                        w = word
+                        letter = w[0]
+                        w = w[1:]
+    return positions
+
+def word_search_solver_recursive_horitzontal(matrix, word, letter, row, col, positions):
+    """
+
+    :param matrix, word, letter, row, col, positions:
+    :return: 
+    """
+    if word == []:
+        if matrix[row][col] == letter:
+            positions.append((row,col))
+            return True
+        else:
+            return False
+    else:   
+        if matrix[row][col] == letter:
+            positions.append((row,col))
+            letter = word[0]
+            word = word[1:]
+            return word_search_solver_recursive_horitzontal(matrix, word, letter, row, col + 1, positions) #horitzontal
+        else:
+            return False
+    
+def word_search_solver_recursive_vertical(matrix, word, letter, row, col, positions):
+    """
+
+    :param matrix, word, letter, row, col, positions:
+    :return: 
+    """
+    if word == []:
+        if matrix[row][col] == letter:
+            positions.append((row,col))
+            return True
+        else:
+            return False
+    else:   
+        if matrix[row][col] == letter:
+            positions.append((row,col))
+            letter = word[0]
+            word = word[1:]
+            return word_search_solver_recursive_vertical(matrix, word, letter, row + 1, col, positions) #horitzontal
+        else:
+            return False 
 
 if __name__ == "__main__":
-    mode = "hard"
+    mode = "solve"
     if mode == "easy":
         img = read_image('../images/mini_word.png')
         gray = get_gray_image(img)
@@ -224,3 +303,8 @@ if __name__ == "__main__":
         result = find_contours(img, inv_thresh2, new_thresh2)
         result = result.reshape((15, 20))
         print(result)
+        
+    elif mode == "solve":
+        matrix =[['s','d','o','g'],['c','u','c','m'],['a','u','a','t'],['i','e','t','k']]
+        word = 'cat'
+        positions = word_search_solver(matrix, word)
