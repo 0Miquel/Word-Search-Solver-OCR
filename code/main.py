@@ -7,6 +7,9 @@ import time
 from keras.models import load_model
 from pytesseract import Output
 from skimage import measure
+import itertools as it
+import matplotlib.pyplot as plt
+#from opencv import surf
 
 pytesseract.pytesseract.tesseract_cmd = r'E:\Tesseract-OCR\tesseract'
 custom_oem_psm_config = r'-c tessedit_char_whitelist=ABCDEFGHIJKLMNOPQRSTUVWXYZ --oem 3 --psm 10'
@@ -238,52 +241,173 @@ def word_search_solver(matrix, word): #de moment només horitzontal i vertical c
                         w = word
                         letter = w[0]
                         w = w[1:]
-    return positions
+                else:
+                    break
+    if not trobat:
+        for row in range(len(matrix)):
+            for col in range(len(matrix[row])):
+                if not trobat:
+                    trobat = word_search_solver_recursive_diagonal_dreta(matrix, w, letter, row, col, positions) #word te at, letter te c
+                    if (trobat == False and positions != []):
+                        positions = []
+                        letter = word[0]
+                        w = word
+                        letter = w[0]
+                        w = w[1:]
+                else:
+                    break              
+    if not trobat:
+        for row in range(len(matrix)):
+            for col in range(len(matrix[row])):
+                if not trobat:
+                    trobat = word_search_solver_recursive_diagonal_esquerra(matrix, w, letter, row, col, positions) #word te at, letter te c
+                    if (trobat == False and positions != []):
+                        positions = []
+                        letter = word[0]
+                        w = word
+                        letter = w[0]
+                        w = w[1:]
+                else:
+                    break
+    
+    return positions, trobat
 
 def word_search_solver_recursive_horitzontal(matrix, word, letter, row, col, positions):
-    """
-
-    :param matrix, word, letter, row, col, positions:
-    :return: 
-    """
     if word == []:
-        if matrix[row][col] == letter:
-            positions.append((row,col))
-            return True
+        if row < np.shape(matrix)[0] and col < np.shape(matrix)[1]:
+            if matrix[row][col] == letter:
+                positions.append((row,col))
+                return True
+            else:
+                return False
         else:
             return False
-    else:   
-        if matrix[row][col] == letter:
-            positions.append((row,col))
-            letter = word[0]
-            word = word[1:]
-            return word_search_solver_recursive_horitzontal(matrix, word, letter, row, col + 1, positions) #horitzontal
+    else:
+        if row < np.shape(matrix)[0] and col < np.shape(matrix)[1]:
+            if matrix[row][col] == letter:
+                positions.append((row,col))
+                letter = word[0]
+                word = word[1:]
+                return word_search_solver_recursive_horitzontal(matrix, word, letter, row, col + 1, positions) #horitzontal
+            else:
+                return False
         else:
             return False
     
 def word_search_solver_recursive_vertical(matrix, word, letter, row, col, positions):
-    """
-
-    :param matrix, word, letter, row, col, positions:
-    :return: 
-    """
     if word == []:
-        if matrix[row][col] == letter:
-            positions.append((row,col))
-            return True
+        if row < np.shape(matrix)[0] and col < np.shape(matrix)[1]:
+            if matrix[row][col] == letter:
+                positions.append((row,col))
+                return True
+            else:
+                return False
         else:
             return False
-    else:   
-        if matrix[row][col] == letter:
-            positions.append((row,col))
-            letter = word[0]
-            word = word[1:]
-            return word_search_solver_recursive_vertical(matrix, word, letter, row + 1, col, positions) #horitzontal
+    else:  
+        if row < np.shape(matrix)[0] and col < np.shape(matrix)[1]:
+            if matrix[row][col] == letter:
+                positions.append((row,col))
+                letter = word[0]
+                word = word[1:]
+                return word_search_solver_recursive_vertical(matrix, word, letter, row + 1, col, positions) #horitzontal
+            else:
+                return False 
         else:
-            return False 
+            return False
+
+def word_search_solver_recursive_diagonal_dreta(matrix, word, letter, row, col, positions):
+    if word == []:
+        if row < np.shape(matrix)[0] and col < np.shape(matrix)[1]:
+            if matrix[row][col] == letter:
+                positions.append((row,col))
+                return True
+            else:
+                return False
+        else:
+            return False
+    else:  
+        if row < np.shape(matrix)[0] and col < np.shape(matrix)[1]:
+            if matrix[row][col] == letter:
+                positions.append((row,col))
+                letter = word[0]
+                word = word[1:]
+                return word_search_solver_recursive_diagonal_dreta(matrix, word, letter, row + 1, col + 1, positions)
+            else:
+                return False 
+        else:
+            return False
+
+def word_search_solver_recursive_diagonal_esquerra(matrix, word, letter, row, col, positions):
+    if word == []:
+        if row < np.shape(matrix)[0] and col < np.shape(matrix)[1]:
+            if matrix[row][col] == letter:
+                positions.append((row,col))
+                return True
+            else:
+                return False
+        else:
+            return False
+    else:  
+        if row < np.shape(matrix)[0] and col < np.shape(matrix)[1]:
+            if matrix[row][col] == letter:
+                positions.append((row,col))
+                letter = word[0]
+                word = word[1:]
+                return word_search_solver_recursive_diagonal_esquerra(matrix, word, letter, row + 1, col - 1, positions)
+            else:
+                return False 
+        else:
+            return False
+
+def alignImages(im1, im2):
+    
+    im1Gray = get_gray_image(img)
+    im2Gray = get_gray_image(img2)
+    
+    orb = cv2.ORB_create(500)
+    keypoints1, descriptors1 = orb.detectAndCompute(im1Gray, None)
+    keypoints2, descriptors2 = orb.detectAndCompute(im2Gray, None)
+    
+    #matcher = cv2.DescriptorMatcher_create(cv2.DESCRIPTOR_MATCHER_BRUTEFORCE_HAMMING)
+    #matches = matcher.match(descriptors1, descriptors2, None)
+    
+    matcher = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
+    matches = matcher.match(descriptors1, descriptors2)
+    
+    matches.sort(key=lambda x: x.distance, reverse=False)
+    numGoodMatches = int(len(matches) * 0.15)
+    
+    matches = matches[:numGoodMatches]
+    
+    imMatches = cv2.drawMatches(im1, keypoints1, im2, keypoints2, matches, None)
+    plt.imshow(imMatches)
+    
+    points1 = np.zeros((len(matches), 2), dtype=np.float32)
+    points2 = np.zeros((len(matches), 2), dtype=np.float32)
+    for i, match in enumerate(matches):
+        points1[i, :] = keypoints1[match.queryIdx].pt
+        points2[i, :] = keypoints2[match.trainIdx].pt 
+    h, mask = cv2.findHomography(points1, points2, cv2.RANSAC)
+    height, width, channels = im2.shape
+    im1Reg = cv2.warpPerspective(im1, h, (width, height))
+    
+    '''
+    kp, des = surf.detectAndCompute(im1Gray,None)
+    kp2, des2 = surf.detectAndCompute(im2Gray,None)
+    matcher = cv2.DescriptorMatcher_create(cv2.DESCRIPTOR_MATCHER_BRUTEFORCE_HAMMING)
+    matches = matcher.match(des, des2, None)
+    
+    matches.sort(key=lambda x: x.distance, reverse=False)
+    numGoodMatches = int(len(matches) * 0.15)
+    '''
+    
+    return im1Reg, h
+
+
 
 if __name__ == "__main__":
-    mode = "solve"
+    mode = "test"
     if mode == "easy":
         img = read_image('../images/mini_word.png')
         gray = get_gray_image(img)
@@ -303,8 +427,14 @@ if __name__ == "__main__":
         result = find_contours(img, inv_thresh2, new_thresh2)
         result = result.reshape((15, 20))
         print(result)
-        
     elif mode == "solve":
-        matrix =[['s','d','o','g'],['c','u','c','m'],['a','u','a','t'],['i','e','t','k']]
+        matrix =[['s','d','o','g'],['z','u','c','a'],['a','a','x','t'],['t','e','t','k']]
         word = 'cat'
-        positions = word_search_solver(matrix, word)
+        positions, trobat = word_search_solver(matrix, word)
+    elif mode == "test":
+        img = read_image('../images/example6.jpg')
+        img2 = read_image('../images/example41.jpeg')
+        #img = get_gray_image(img)
+        #img2 = get_gray_image(img2)
+        im, h = alignImages(img, img2)
+        plt.imshow(im)
