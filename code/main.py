@@ -417,12 +417,12 @@ if __name__ == "__main__":
         result = result.reshape((10, 10))
         print(result)
     elif mode == "hard":
-        img = read_image('../images/example6.jpg')
+        img = read_image('../images/example41.jpeg')
         gray = get_gray_image(img)
         thresh = adaptative_threshold(gray)
         inv_thresh = inv_image(thresh)
         new_thresh = remove_extra_information(thresh, inv_thresh)
-
+        cv2.imwrite("threshold.png", new_thresh)
         new_thresh2, inv_thresh2 = remove_isolated_pixels(new_thresh)
         result = find_contours(img, inv_thresh2, new_thresh2)
         result = result.reshape((15, 20))
