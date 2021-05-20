@@ -54,8 +54,8 @@ def adaptative_threshold(gray):
     thresh = cv2.adaptiveThreshold(blur, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, \
                                 cv2.THRESH_BINARY, 27, 18)
 
-    plt.imshow(thresh,cmap='gray')
-    plt.show()
+    #plt.imshow(thresh,cmap='gray')
+    #plt.show()
     return thresh
 
 def remove_extra_information(thresh, inv_thresh):

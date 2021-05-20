@@ -4,10 +4,10 @@ import cv2
 import solver
 import ground_truth
 
-mode = "visualize"
+mode = "predict"
 
 # PREPROCESSING
-gray = preprocessing.read_gray_image('../images/image6.jpg')
+gray = preprocessing.read_gray_image('../images/image3.jpeg')
 # threshold
 thresh = preprocessing.adaptative_threshold(gray)
 # inverse threhsold
@@ -26,7 +26,7 @@ if mode == "visualize":
     preprocessing.draw_ctrs(inv_thresh, thresh)
 elif mode == "predict":
     result = predictor.predict_chars(inv_thresh,thresh)
-    print(result)
+    print(result.reshape((15,20)))
     acc = predictor.evaluate_model(result, ground_truth.image3_gt)
 elif mode == "generate_dataset":
     #generate dataset
