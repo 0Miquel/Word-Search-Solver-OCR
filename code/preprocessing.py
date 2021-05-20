@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 import imutils
 from skimage import measure
+import matplotlib.pyplot as plt
 
 def get_contours(inv_thresh):
     ctrs, hier = cv2.findContours(inv_thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
@@ -34,9 +35,8 @@ def draw_ctrs(inv_thresh, thresh):
         # Get bounding box
         x, y, w, h = ctr
         cv2.rectangle(aux_thresh, (x-5, y-5), (x + w+5, y + h+5), (90, 0, 255), 2)
-    cv2.imshow('marked areas', aux_thresh)
-    cv2.waitKey()
-    cv2.destroyAllWindows()
+    plt.imshow(aux_thresh, cmap='gray')
+    plt.show()
 
 def read_gray_image(img_path):
     # read image
@@ -45,18 +45,17 @@ def read_gray_image(img_path):
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     return gray
 
-def binarize_image(gray):
-    # binarize
-    ret, thresh = cv2.threshold(gray, 127, 255, cv2.THRESH_BINARY)
-    return thresh
-
 def inv_image(thresh):
     inv_thresh = cv2.bitwise_not(thresh)
     return inv_thresh
 
 def adaptative_threshold(gray):
-    thresh = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, \
+    blur = cv2.GaussianBlur(gray, (5, 5), 0)
+    thresh = cv2.adaptiveThreshold(blur, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, \
                                 cv2.THRESH_BINARY, 27, 18)
+
+    plt.imshow(thresh,cmap='gray')
+    plt.show()
     return thresh
 
 def remove_extra_information(thresh, inv_thresh):
@@ -85,7 +84,7 @@ def remove_extra_information(thresh, inv_thresh):
             #if labels[i][j] == 1:
                 new_thresh[i][j] = 255
 
-    return new_thresh, box
+    return new_thresh, new_box
 
 def remove_isolated_pixels(thresh):
     inv_thresh = inv_image(thresh)
@@ -95,8 +94,11 @@ def remove_isolated_pixels(thresh):
     labels = output[1]
     stats = output[2]
 
+    regions_lines = measure.regionprops(labels)
+    area_lines = np.array([region.area for region in regions_lines])
+    mean_area = area_lines.mean()
     for label in range(n_labels):
-        if stats[label, cv2.CC_STAT_AREA] < 15:
+        if stats[label, cv2.CC_STAT_AREA] < mean_area*0.1:
             inv_thresh[labels == label] = 0
 
     new_thresh = inv_image(inv_thresh)

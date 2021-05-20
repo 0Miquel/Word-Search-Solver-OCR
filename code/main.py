@@ -4,9 +4,10 @@ import cv2
 import solver
 import ground_truth
 
-mode = "preprocessing"
+mode = "visualize"
 
-gray = preprocessing.read_gray_image('../images/image4.jpeg')
+# PREPROCESSING
+gray = preprocessing.read_gray_image('../images/image6.jpg')
 # threshold
 thresh = preprocessing.adaptative_threshold(gray)
 # inverse threhsold
@@ -20,13 +21,13 @@ warped = preprocessing.homography(corners, thresh)
 thresh, inv_thresh = preprocessing.remove_isolated_pixels(warped)
 
 
-if mode == "preprocessing":
+if mode == "visualize":
     #draw characters contours
     preprocessing.draw_ctrs(inv_thresh, thresh)
 elif mode == "predict":
     result = predictor.predict_chars(inv_thresh,thresh)
     print(result)
-    acc = predictor.evaluate_model(result, ground_truth.image6_gt)
+    acc = predictor.evaluate_model(result, ground_truth.image3_gt)
 elif mode == "generate_dataset":
     #generate dataset
     predictor.generate_dataset(inv_thresh, thresh)
