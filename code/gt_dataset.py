@@ -25,10 +25,11 @@ gt_dataset0 = [
 'A', 'A', 'T', 'O', 'H', 'A', 'M', 'E', 'W', 'T', 'Y', 'I', 'M', 'L', 'O', 'W', 'T', 'L', 'B', 'G',
 'B', 'U', 'G', 'V', 'U', 'H', 'J', 'Z', 'H', 'E', 'Z', 'H', 'R', 'A', 'T', 'T', 'P', 'I', 'N', 'Q'
 ]
+gt_dataset01 = np.array([word_dict2[k] for k in gt_dataset0])
 
-count = np.zeros(26, dtype='int')
+"""count = np.zeros(26, dtype='int')
 for i in gt_dataset0:
     count[word_dict2[i]] += 1
-print(count)
+print(count)"""
 
 

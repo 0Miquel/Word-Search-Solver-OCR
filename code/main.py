@@ -7,7 +7,7 @@ mode = "predict"
 
 if mode == "preprocessing":
     #gray image
-    gray = preprocessing.read_gray_image('../images/image4.jpeg')
+    gray = preprocessing.read_gray_image('../images/image7.jpeg')
     #threshold
     thresh = preprocessing.adaptative_threshold(gray)
     cv2.imshow("First thresh",thresh)
@@ -28,7 +28,7 @@ if mode == "preprocessing":
     #draw characters contours
     preprocessing.draw_ctrs(inv_thresh, thresh)
 elif mode == "predict":
-    gray = preprocessing.read_gray_image('../images/image4.jpeg')
+    gray = preprocessing.read_gray_image('../images/image7.jpeg')
     # threshold
     thresh = preprocessing.adaptative_threshold(gray)
     # inverse threhsold
