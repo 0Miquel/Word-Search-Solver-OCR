@@ -28,7 +28,7 @@ example2_gt = [
 'A', 'A', 'T', 'O', 'H', 'A', 'M', 'E', 'W', 'T', 'Y', 'I', 'M', 'L', 'O', 'W', 'T', 'L', 'B', 'G',
 'B', 'U', 'G', 'V', 'U', 'H', 'J', 'Z', 'H', 'E', 'Z', 'H', 'R', 'A', 'T', 'T', 'P', 'I', 'N', 'Q'
 ]
-example2_gt_num = np.array([word_dict2[k] for k in example2_gt])
+
 
 #image6
 image6_gt = [
@@ -48,7 +48,7 @@ image6_gt = [
  'A', 'O', 'T', 'I', 'F', 'A', 'R', 'G', 'N', 'J', 'I', 'R', 'O', 'I', 'O', 'R', 'R', 'E', 'B', 'U',
  'Z', 'T', 'U', 'R', 'N', 'O', 'V', 'I', 'L', 'L', 'O', 'O', 'B', 'O', 'R', 'G', 'A', 'N', 'O', 'D'
 ]
-image6_gt_num = np.array([word_dict2[k] for k in image6_gt])
+
 
 #image4
 image4_gt = [
@@ -68,7 +68,7 @@ image4_gt = [
  'A', 'A', 'O', 'D', 'A', 'I', 'P', 'O', 'C', 'A', 'H', 'Y', 'O', 'E', 'N', 'E', 'G', 'E', 'G', 'A',
  'F', 'R', 'M', 'O', 'R', 'E', 'C', 'U', 'R', 'C', 'O', 'L', 'O', 'R', 'E', 'N', 'R', 'O', 'H', 'P'
 ]
-image4_gt_num = np.array([word_dict2[k] for k in image4_gt])
+
 
 #image3
 image3_gt = [
@@ -88,7 +88,7 @@ image3_gt = [
  'R', 'S', 'A', 'N', 'D', 'E', 'Z', 'R', 'A', 'P', 'I', 'F', 'A', 'N', 'E', 'C', 'A', 'D', 'O', 'I',
  'T', 'R', 'U', 'J', 'A', 'L', 'O', 'R', 'P', 'U', 'L', 'S', 'O', 'S', 'O', 'J', 'U', 'L', 'P', 'O'
 ]
-image3_gt_num = np.array([word_dict2[k] for k in image3_gt])
+
 
 #image2
 image2_gt = [
@@ -108,9 +108,3 @@ image2_gt = [
  'L', 'S', 'A', 'N', 'U', 'D', 'I', 'A', 'M', 'E', 'T', 'R', 'O', 'I', 'C', 'R', 'E', 'T', 'U', 'F',
  'A', 'T', 'L', 'T', 'B', 'V', 'A', 'R', 'A', 'D', 'A', 'A', 'L', 'L', 'I', 'N', 'A', 'L', 'J', 'O'
 ]
-image2_gt_num = np.array([word_dict2[k] for k in image2_gt])
-
-
-
-
-

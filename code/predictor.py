@@ -16,9 +16,6 @@ word_dict = {0:'A',1:'B',2:'C',3:'D',4:'E',5:'F',6:'G',7:'H',8:'I',9:'J',10:'K',
 
 def evaluate_char_model(img_char):
     img_resize = cv2.resize(img_char, (28, 28))
-    """cv2.imshow("1", img_resize)
-    cv2.waitKey()
-    cv2.destroyAllWindows()"""
     img_char = preprocessing.adaptative_threshold(img_resize)
     img_final = np.reshape(img_char, (1, 28, 28, 1))
     char = word_dict[np.argmax(model.predict(img_final))]
@@ -27,10 +24,6 @@ def evaluate_char_model(img_char):
 
 def evaluate_char_tesseract(img_char):
     ocr = pytesseract.image_to_data(img_char, output_type=Output.DICT, config=custom_oem_psm_config)
-    #print(ocr['text'][-1], ocr['conf'][-1])
-    #cv2.imshow("1", img_char)
-    #cv2.waitKey()
-    #cv2.destroyAllWindows()
     char = ocr['text'][-1]
     return char
 
@@ -56,13 +49,9 @@ def generate_dataset(inv_thresh, thresh):
         x, y, w, h = ctr
         # Getting character
         img_char = thresh[y - 5:y + h + 5, x - 5:x + w + 5]
-        #cv2.imshow("1",img_char)
         # save character
         img_resize = cv2.resize(img_char, (28, 28))
         img_char = preprocessing.adaptative_threshold(img_resize)
-        """cv2.imshow("2", img_char)
-        cv2.waitKey()
-        cv2.destroyAllWindows()"""
         cv2.imwrite('./data/' + str(i+1000) + '.png', img_char)
 
 def evaluate_model(pred, gt):

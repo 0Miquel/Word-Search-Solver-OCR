@@ -4,10 +4,10 @@ import cv2
 import solver
 import ground_truth
 
-mode = "predict"
+mode = "visualize"
 
 # PREPROCESSING
-gray = preprocessing.read_gray_image('../images/image3.jpeg')
+gray = preprocessing.read_gray_image('../images/image2.jpeg')
 # threshold
 thresh = preprocessing.adaptative_threshold(gray)
 # inverse threhsold
