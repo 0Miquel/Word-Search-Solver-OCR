@@ -9,7 +9,7 @@ pytesseract.pytesseract.tesseract_cmd = r'E:\Tesseract-OCR\tesseract'
 custom_oem_psm_config = r'-c tessedit_char_whitelist=ABCDEFGHIJKLMNOPQRSTUVWXYZ --oem 3 --psm 10'
 
 from keras.models import load_model
-model = load_model('./model/model_print1300.h5')
+model = load_model('./model/model_hand.h5')
 word_dict = {0:'A',1:'B',2:'C',3:'D',4:'E',5:'F',6:'G',7:'H',8:'I',9:'J',10:'K',11:'L',12:'M',
              13:'N',14:'O',15:'P',16:'Q',17:'R',18:'S',19:'T',20:'U',21:'V',22:'W',23:'X', 24:'Y',25:'Z'}
 
@@ -52,7 +52,7 @@ def generate_dataset(inv_thresh, thresh):
         # save character
         img_resize = cv2.resize(img_char, (28, 28))
         img_char = preprocessing.adaptative_threshold(img_resize)
-        cv2.imwrite('./data/' + str(i+1000) + '.png', img_char)
+        cv2.imwrite('./data/' + str(i+1600) + '.png', img_char)
 
 def evaluate_model(pred, gt):
     acc = sum(pred == gt) / pred.size
