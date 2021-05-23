@@ -4,10 +4,11 @@ import cv2
 import solver
 import ground_truth
 
-mode = "solve"
+mode = "predict"
 
 # PREPROCESSING
-gray = preprocessing.read_gray_image('../images/image8.jpeg')
+img = preprocessing.read_image('../images/image4.jpeg')
+gray = preprocessing.gray_image(img)
 # threshold
 thresh = preprocessing.adaptative_threshold(gray)
 # inverse threhsold
@@ -16,25 +17,33 @@ inv_thresh = preprocessing.inv_image(thresh)
 thresh, box = preprocessing.remove_extra_information(thresh, inv_thresh)
 # homography
 corners = preprocessing.get_corners(box)
-warped = preprocessing.homography(corners, thresh)
+thresh_warped, img_warped = preprocessing.homography(corners, thresh, img)
+
 # remove isolated pixels
-thresh, inv_thresh = preprocessing.remove_isolated_pixels(warped)
+thresh, inv_thresh = preprocessing.remove_isolated_pixels(thresh_warped)
 
 
 if mode == "visualize":
     #draw characters contours
     preprocessing.draw_ctrs(inv_thresh, thresh)
 elif mode == "predict":
-    result = predictor.predict_chars(inv_thresh,thresh)
-    print(result.reshape((15,20)))
-    acc = predictor.evaluate_model(result, ground_truth.image8_gt)
+    result, contours = predictor.predict_chars(inv_thresh,thresh)
+    m_res = result.reshape((contours.shape[0],contours.shape[1]))
+    print(m_res)
+    #acc = predictor.evaluate_model(result, ground_truth.image8_gt)
+
+    while True:
+        word = input("Enter word: ")
+        if word == "q":
+            break
+        positions, found = solver.word_search_solver(m_res, word, False)
+        if found:
+            print("Found")
+            img_warped = preprocessing.draw_results(contours, positions, img_warped)
+            preprocessing.undo_homography(corners, img, img_warped)
+        else:
+            print("Not found")
+
 elif mode == "generate_dataset":
     #generate dataset
     predictor.generate_dataset(inv_thresh, thresh)
-
-
-elif mode == "solve":
-    matrix =[['s','d','t','g'],['z','a','x','a'],['c','a','x','t'],['c','e','t','k']]
-    word = 'cat'
-    positions, trobat = solver.word_search_solver(matrix, word, False)
-    

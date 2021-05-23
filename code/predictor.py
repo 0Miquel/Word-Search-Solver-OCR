@@ -29,8 +29,8 @@ def evaluate_char_tesseract(img_char):
 
 def predict_chars(inv_thresh, thresh):
     result = []
-    ctrs = preprocessing.get_contours(inv_thresh)
-    for i, ctr in enumerate(ctrs):
+    sorted_ctrs, flat_ctrs = preprocessing.get_contours(inv_thresh)
+    for i, ctr in enumerate(flat_ctrs):
         # Get bounding box
         x, y, w, h = ctr
         # Getting character
@@ -41,10 +41,10 @@ def predict_chars(inv_thresh, thresh):
         result.append(char)
 
     result = np.array(result)
-    return result
+    return result, sorted_ctrs
 
 def generate_dataset(inv_thresh, thresh):
-    ctrs = preprocessing.get_contours(inv_thresh)
+    _, ctrs = preprocessing.get_contours(inv_thresh)
     for i, ctr in enumerate(ctrs):
         # Get bounding box
         x, y, w, h = ctr

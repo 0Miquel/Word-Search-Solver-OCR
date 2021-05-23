@@ -11,7 +11,6 @@ from keras.utils import to_categorical
 from keras.models import load_model
 model = load_model('./model/model_hand.h5')
 
-
 print(model.summary())
 print(model.optimizer.get_config())
 
@@ -34,7 +33,7 @@ print("Shape of train labels: ", y.shape)
 x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
 
 history = model.fit(x_train, y_train, epochs=10,  validation_data = (x_test,y_test), verbose=1)
-#model.save("./model/model_print1150.h5")
+#model.save("./model/model_print1900.h5")
 
 
 
