@@ -5,11 +5,11 @@ import numpy as np
 
 import pytesseract
 from pytesseract import Output
-pytesseract.pytesseract.tesseract_cmd = r'E:\Tesseract-OCR\tesseract'
+pytesseract.pytesseract.tesseract_cmd = r'C:\Users\Tesseract-OCR\tesseract'
 custom_oem_psm_config = r'-c tessedit_char_whitelist=ABCDEFGHIJKLMNOPQRSTUVWXYZ --oem 3 --psm 10'
 
 from keras.models import load_model
-model = load_model('./model/model_hand.h5')
+model = load_model('./model/model_print1900.h5')
 word_dict = {0:'A',1:'B',2:'C',3:'D',4:'E',5:'F',6:'G',7:'H',8:'I',9:'J',10:'K',11:'L',12:'M',
              13:'N',14:'O',15:'P',16:'Q',17:'R',18:'S',19:'T',20:'U',21:'V',22:'W',23:'X', 24:'Y',25:'Z'}
 
@@ -37,6 +37,7 @@ def predict_chars(inv_thresh, thresh):
         img_char = thresh[y-5:y + h+5, x-5:x + w+5]
         # evaluate character
         char = evaluate_char_model(img_char)
+        #char = evaluate_char_tesseract(img_char)
         result.append(char)
 
     result = np.array(result)

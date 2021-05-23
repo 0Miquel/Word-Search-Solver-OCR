@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def word_search_solver(matrix, word):  # de moment només horitzontal i vertical cap a la dreta i abaix
+def word_search_solver(matrix, word, inversetry):  # de moment només horitzontal i vertical cap a la dreta i abaix
     """
 
     :param matrix, word:
@@ -69,7 +69,11 @@ def word_search_solver(matrix, word):  # de moment només horitzontal i vertical
                         w = w[1:]
                 else:
                     break
-
+    
+    if not inversetry and not trobat:
+        word_inverted = word[::-1]
+        positions, trobat = word_search_solver(matrix, word_inverted, True)
+    
     return positions, trobat
 
 
