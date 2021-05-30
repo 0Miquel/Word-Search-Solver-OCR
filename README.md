@@ -1,1 +1,1 @@
-# Word-Search-Solver
+# Word search solver with OCR
