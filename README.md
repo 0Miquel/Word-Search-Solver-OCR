@@ -1,7 +1,9 @@
 # Word search solver with OCR
 ![resultatSopaLletres](https://user-images.githubusercontent.com/48658941/120107885-07b29800-c163-11eb-82f1-0aded77600d0.png)
 
-Computer vision project from Universitat Autònoma de Barcelona
+### Computer vision project from Universitat Autònoma de Barcelona
+
+#
 
 To acomplish the desired results in our word search solver with have implemented different modules:
 - Pre processing: filtering, homographies and character detection.
