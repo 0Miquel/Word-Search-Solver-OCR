@@ -12,8 +12,6 @@ To acomplish the desired results in our word search solver with have implemented
 
 A part from pre-trained models we also have tried the open-source OCR Tesseract, but we did not achieve good enough results to solve word searches consistently.
 
-#
-
 ## Authors
 - Miquel Romero Blanch
 - Gerard Graugés Bellver
